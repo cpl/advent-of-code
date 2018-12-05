@@ -23,11 +23,17 @@ func (s *stack) POP() rune {
 
 func (s *stack) PEAK() rune {
 	if s.SP == 0 {
-		fmt.Println("PEAK with SP 0")
 		return 0
 	}
 	return s.data[s.SP-1]
 }
+
+var alpha = []rune{
+	'a', 'b', 'c', 'd', 'e',
+	'f', 'g', 'h', 'i', 'j',
+	'k', 'l', 'm', 'n', 'o',
+	'p', 'q', 'r', 's', 't',
+	'u', 'v', 'w', 'x', 'y', 'z'}
 
 func main() {
 	var s stack
@@ -38,17 +44,33 @@ func main() {
 		panic(err)
 	}
 
-	for _, c := range data {
-		r := rune(c)
+	minSP := 50000
 
-		if unicode.IsLower(r) && unicode.ToUpper(r) == s.PEAK() {
-			s.POP()
-		} else if unicode.IsUpper(r) && unicode.ToLower(r) == s.PEAK() {
-			s.POP()
-		} else {
-			s.PUSH(r)
+	for _, ignore := range alpha {
+		s.SP = 0
+		fmt.Printf("Ignoring: %c\n", ignore)
+
+		for _, c := range data {
+			r := rune(c)
+
+			if unicode.ToLower(r) == ignore {
+				continue
+			}
+
+			if unicode.IsLower(r) && unicode.ToUpper(r) == s.PEAK() {
+				s.POP()
+			} else if unicode.IsUpper(r) && unicode.ToLower(r) == s.PEAK() {
+				s.POP()
+			} else {
+				s.PUSH(r)
+			}
+		}
+
+		fmt.Printf("SP: %d\n", s.SP)
+		if s.SP < minSP {
+			minSP = s.SP
 		}
 	}
 
-	fmt.Println("SP: ", s.SP)
+	fmt.Println("min SP: ", minSP)
 }
