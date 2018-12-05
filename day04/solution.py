@@ -62,6 +62,8 @@ if __name__ == '__main__':
         if v[0] > max_mins:
             max_mins = v[0]
             max_gid = k
+
+    print("PART 1")
     print("GUARD ID: %d" % max_gid)
 
     max_min = 0
@@ -73,3 +75,19 @@ if __name__ == '__main__':
 
     print("MINUTE: %d" % (max_mini+1))
     print("ANS: %d" % ((max_mini+1)*max_gid))
+
+
+    max_min = 0
+    max_mini = 0
+    max_gid = 0
+    for k, v in guards.items():
+        for index, m in enumerate(v[1:]):
+            if m > max_min:
+                max_min = m
+                max_gid = k
+                max_mini = index
+
+    print("PART 2")
+    print("GUARD ID: %d" % max_gid)
+    print("MINUTE: %d" % (max_mini+1))
+    print("ANS: %d" % (max_gid*(max_mini+1)))
