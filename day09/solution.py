@@ -1,5 +1,7 @@
 import sys
 import string
+import collections
+
 
 all=string.maketrans('','')
 no_digits = all.translate(all, string.digits)
@@ -14,42 +16,18 @@ for dataset in range(int(sys.argv[2])):
 
     print(player_count, last_value)
 
+    # dirty elves >.>
+    players = collections.defaultdict(int)
+    board = collections.deque([0])
 
-    current = 4
-    players = [0 for _ in range(player_count)]
-    board = [0, 4, 2, 1, 3]
-
-    # print(players)
-    # print(board)
-
-    pturn = 4
-    for m in range(5, last_value+1):
-
+    for m in range(1, last_value+1):
         if m % 23 == 0:
-            idx = board.index(current)-7
-            if idx < 0:
-                idx += len(board)
-
-            players[pturn] += m
-            players[pturn] += board[idx]
-            board.pop(idx)
-            current = board[idx]
-            pturn = (pturn+1)%player_count
+            board.rotate(7)
+            players[m % player_count] += m + board.pop()
+            board.rotate(-1)
             continue
 
-        # normal insert
-        idx = board.index(current)+2
-        if idx > len(board):
-            idx = idx % len(board)
-        board.insert(idx, m)
-        current = m
+        board.rotate(-1)
+        board.append(m)
 
-        # debug
-        # print(m)
-        # print(board)
-
-        # update player turn
-        pturn = (pturn+1)%player_count
-
-    print(players)
-    print("HIGH SCORE:", max(players))
+    print("HIGH SCORE:", max(players.values()))
