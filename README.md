@@ -1,6 +1,6 @@
 # [Advent of Code 2018](https://adventofcode.com/2018)
 
-![Stars](https://img.shields.io/badge/STARS-15*-yellow.svg)
+![Stars](https://img.shields.io/badge/STARS-16*-yellow.svg)
 
 Day  | Solutions | Problem
 ---: | :-------- | :----------
