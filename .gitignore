@@ -1,5 +1,6 @@
 .vscode/
 .idea/
+.env
 
 # Solution binary
 solution
