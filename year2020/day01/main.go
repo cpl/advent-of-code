@@ -1,24 +1,19 @@
 package main
 
 import (
-	"../../utils"
 	"bufio"
 	"bytes"
 	"fmt"
 	"log"
 	"strconv"
 	"strings"
-)
 
-func checkErr(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+	"../../utils"
+)
 
 func main() {
 	data, err := utils.GetInput(2020, 01)
-	checkErr(err)
+	utils.CheckErr(err)
 
 	scanner := bufio.NewScanner(bytes.NewBuffer(data))
 	scanner.Split(bufio.ScanLines)
@@ -56,7 +51,7 @@ func findSum3(target int, numbers []int) (int, int, int) {
 func findSum2(target int, numbers []int) (int, int) {
 	numMap := make(map[int]bool, len(numbers))
 	for _, num := range numbers {
-		want := target-num
+		want := target - num
 		if _, ok := numMap[want]; ok {
 			return num, want
 		}
