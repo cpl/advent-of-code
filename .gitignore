@@ -1,6 +1,7 @@
 .vscode/
 .idea/
 .env
+**/input.txt
 
 # Solution binary
 solution
