@@ -1,11 +1,15 @@
 .PHONY: morning today clean
 
+all: morning today
+
+TODAY_PATH = $$(date +year%Y/day%d)
+
 morning:
-	mkdir -p $$(date +year%Y/day%d)
-	cp -n ./utils/main.go.template $$(date +year%Y/day%d)/main.go
+	@mkdir -p $(TODAY_PATH)
+	@cp -n ./utils/main.go.template $(TODAY_PATH)/main.go
 
 today:
-	go run $$(date +year%Y/day%d)/*.go
+	@go run $(TODAY_PATH)/*.go
 
 clean:
-	rm ./*/*/input.txt
+	@rm ./*/*/input.txt
