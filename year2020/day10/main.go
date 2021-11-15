@@ -54,4 +54,29 @@ func main() {
 	fmt.Println(joltDiff)
 	fmt.Println(joltDiff[1] * joltDiff[3])
 	fmt.Println(joltDiffList)
+
+	count1 := 0
+	countSeq := map[int]int{
+		0: 0,
+		1: 0,
+		2: 0,
+		3: 0,
+		4: 0,
+		5: 0,
+	}
+	for _, diff := range joltDiffList {
+		if diff == 3 {
+			if count1 > 0 {
+				fmt.Println()
+			}
+
+			countSeq[count1] += 1
+			count1 = 0
+			continue
+		}
+		count1++
+		fmt.Print(diff)
+		fmt.Print(" ")
+	}
+	fmt.Println(countSeq)
 }

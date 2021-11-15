@@ -15,6 +15,9 @@ var x, y int
 var direction = 'E'
 var directionIdx = 1
 
+var waypointX = 10
+var waypointY = 1
+
 func main() {
 	data, err := utils.GetInput(2020, 12)
 	utils.CheckErr(err)
@@ -32,7 +35,7 @@ func main() {
 
 		switch dir {
 		case 'N', 'S', 'E', 'W':
-			goInDirection(dir, val)
+			moveWaypoint(dir, val)
 		case 'L', 'R':
 			goRotate(dir, val)
 		case 'F':
@@ -65,6 +68,19 @@ func goRotateLeft(val int) {
 
 func goRotateRight(val int) {
 	directionIdx = (directionIdx + val) % 4
+}
+
+func moveWaypoint(dir rune, val int) {
+	switch dir {
+	case 'N':
+		waypointY += val
+	case 'S':
+		waypointY -= val
+	case 'E':
+		waypointX += val
+	case 'W':
+		waypointX -= val
+	}
 }
 
 func goInDirection(dir rune, val int) {
