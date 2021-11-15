@@ -4,9 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"math"
 	"strconv"
-
-	"vitess.io/vitess/go/vt/orchestrator/external/golib/math"
 
 	"../../utils"
 )
