@@ -16,7 +16,6 @@ func getIntops() []int {
 	line := string(data)
 	opss := strings.Split(line, ",")
 
-
 	intops := make([]int, len(opss))
 	for idx, op := range opss {
 		intops[idx], err = strconv.Atoi(strings.TrimSpace(op))
@@ -39,16 +38,16 @@ func runVM(intops []int) []int {
 	copy(out, intops)
 
 	var pc int
-	for pc < len(out) && out[pc] != OpStp{
+	for pc < len(out) && out[pc] != OpStp {
 		switch out[pc] {
 		case OpAdd:
 			fmt.Println("+", out[pc:pc+4])
 			out[out[pc+3]] = out[out[pc+1]] + out[out[pc+2]]
-			pc+=4
+			pc += 4
 		case OpMul:
 			fmt.Println("*", out[pc:pc+4])
 			out[out[pc+3]] = out[out[pc+1]] * out[out[pc+2]]
-			pc+=4
+			pc += 4
 		default:
 			fmt.Printf("unkown intop %d at PC %d\n", out[pc], pc)
 			os.Exit(1)
