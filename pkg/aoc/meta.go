@@ -15,7 +15,7 @@ var MetaAuthCookie = os.Getenv("AUTH_COOKIE")
 
 func init() {
 	if MetaAuthCookie == "" {
-		data, _ := ioutil.ReadFile(".env")
+		data, _ := ioutil.ReadFile(".cookie")
 		if data != nil {
 			MetaAuthCookie = strings.TrimSpace(string(data))
 		}
