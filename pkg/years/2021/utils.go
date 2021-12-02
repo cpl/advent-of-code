@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func ParseNumbers(input []byte) []int {
@@ -50,4 +51,64 @@ func NumberThreeMeasureSums(numbers []int) []int {
 	}
 
 	return out
+}
+
+type navigationStep struct {
+	direction string
+	units     int
+}
+
+func ParseNavigation(input []byte) []navigationStep {
+	scanner := bufio.NewScanner(bytes.NewReader(input))
+	scanner.Split(bufio.ScanLines)
+
+	var steps []navigationStep
+	for scanner.Scan() {
+		split := strings.Split(scanner.Text(), " ")
+		direction := split[0]
+		units, _ := strconv.Atoi(split[1])
+		steps = append(steps, navigationStep{direction, units})
+	}
+
+	return steps
+}
+
+func CalculateNavigation(steps []navigationStep) (int, int) {
+	x, depth := 0, 0
+
+	for _, step := range steps {
+		switch step.direction {
+		case "forward":
+			x += step.units
+		case "up":
+			depth -= step.units
+		case "down":
+			depth += step.units
+		default:
+			panic("bad direction: " + step.direction)
+		}
+	}
+
+	return x, depth
+}
+
+func CalculateNavigation2(steps []navigationStep) (int, int) {
+	x, depth, aim := 0, 0, 0
+
+	_ = aim
+	for _, step := range steps {
+		switch step.direction {
+		case "up":
+			aim -= step.units
+		case "down":
+			aim += step.units
+		case "forward":
+			x += step.units
+			depth += step.units * aim
+		default:
+			panic("bad direction: " + step.direction)
+		}
+	}
+
+	return x, depth
 }

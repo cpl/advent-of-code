@@ -64,3 +64,112 @@ func TestNumberThreeMeasureSums(t *testing.T) {
 		}
 	})
 }
+
+func TestNavigation(t *testing.T) {
+	t.Parallel()
+
+	t.Run("example_parse", func(t *testing.T) {
+		input := "forward 5\ndown 5\nforward 8\nup 3\ndown 8\nforward 2"
+		stepsWant := []navigationStep{
+			{
+				direction: "forward",
+				units:     5,
+			},
+			{
+				direction: "down",
+				units:     5,
+			},
+			{
+				direction: "forward",
+				units:     8,
+			},
+			{
+				direction: "up",
+				units:     3,
+			},
+			{
+				direction: "down",
+				units:     8,
+			},
+			{
+				direction: "forward",
+				units:     2,
+			},
+		}
+		steps := ParseNavigation([]byte(input))
+
+		if !reflect.DeepEqual(steps, stepsWant) {
+			t.Errorf("got %v, want %v", steps, stepsWant)
+		}
+	})
+	t.Run("example_calculate", func(t *testing.T) {
+		steps := []navigationStep{
+			{
+				direction: "forward",
+				units:     5,
+			},
+			{
+				direction: "down",
+				units:     5,
+			},
+			{
+				direction: "forward",
+				units:     8,
+			},
+			{
+				direction: "up",
+				units:     3,
+			},
+			{
+				direction: "down",
+				units:     8,
+			},
+			{
+				direction: "forward",
+				units:     2,
+			},
+		}
+		x, depth := CalculateNavigation(steps)
+		if x != 15 {
+			t.Errorf("got %v, want %v", x, 15)
+		}
+		if depth != 10 {
+			t.Errorf("got %v, want %v", depth, 10)
+		}
+	})
+	t.Run("example_calculate_p2", func(t *testing.T) {
+		steps := []navigationStep{
+			{
+				direction: "forward",
+				units:     5,
+			},
+			{
+				direction: "down",
+				units:     5,
+			},
+			{
+				direction: "forward",
+				units:     8,
+			},
+			{
+				direction: "up",
+				units:     3,
+			},
+			{
+				direction: "down",
+				units:     8,
+			},
+			{
+				direction: "forward",
+				units:     2,
+			},
+		}
+		x, depth := CalculateNavigation2(steps)
+		if x != 15 {
+			t.Errorf("got %v, want %v", x, 15)
+		}
+		if depth != 60 {
+			t.Errorf("got %v, want %v", depth, 60)
+		}
+	})
+}
