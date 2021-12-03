@@ -2,6 +2,7 @@ package y2021
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -170,6 +171,68 @@ func TestNavigation(t *testing.T) {
 		}
 		if depth != 60 {
 			t.Errorf("got %v, want %v", depth, 60)
+		}
+	})
+}
+
+func TestParseBinaryListAsStrings(t *testing.T) {
+	t.Parallel()
+
+	t.Run("example", func(t *testing.T) {
+		input := "00100\n11110\n10110\n10111\n10101\n01111\n00111\n11100\n10000\n11001\n00010\n01010"
+		want := strings.Split(input, "\n")
+		binaryList := ParseBinaryListAsStrings([]byte(input))
+
+		if !reflect.DeepEqual(binaryList, want) {
+			t.Errorf("got %v, want %v", binaryList, want)
+		}
+	})
+}
+
+func TestCalculateMostCommonBits(t *testing.T) {
+	t.Parallel()
+
+	t.Run("example", func(t *testing.T) {
+		input := "00100\n11110\n10110\n10111\n10101\n01111\n00111\n11100\n10000\n11001\n00010\n01010"
+		binaryList := ParseBinaryListAsStrings([]byte(input))
+		got := CalculateMostCommonBits(binaryList)
+		want := "10110"
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
+func TestFlipBits(t *testing.T) {
+	t.Parallel()
+
+	t.Run("simple", func(t *testing.T) {
+		in := "111011000011"
+		want := "000100111100"
+		got := FlipBits(in)
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
+func TestWalkBinaryList(t *testing.T) {
+	t.Parallel()
+
+	t.Run("example", func(t *testing.T) {
+		input := "00100\n11110\n10110\n10111\n10101\n01111\n00111\n11100\n10000\n11001\n00010\n01010"
+		got := WalkBinaryList(strings.Split(input, "\n"), true)
+		want := "10111"
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+
+		got = WalkBinaryList(strings.Split(input, "\n"), false)
+		want = "01010"
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
 		}
 	})
 }

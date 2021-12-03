@@ -112,3 +112,100 @@ func CalculateNavigation2(steps []navigationStep) (int, int) {
 
 	return x, depth
 }
+
+func ParseBinaryListAsStrings(input []byte) []string {
+	scanner := bufio.NewScanner(bytes.NewReader(input))
+	scanner.Split(bufio.ScanLines)
+
+	var out []string
+	for scanner.Scan() {
+		out = append(out, scanner.Text())
+	}
+
+	return out
+}
+
+func CalculateMostCommonBits(input []string) string {
+	common := make([]int, len(input[0]))
+
+	for _, s := range input {
+		for idx, c := range s {
+			if c == '1' {
+				common[idx]++
+			}
+		}
+	}
+
+	var out strings.Builder
+	out.Grow(len(input[0]))
+
+	for _, count := range common {
+		if count > len(input)/2 {
+			out.WriteString("1")
+		} else {
+			out.WriteString("0")
+		}
+	}
+
+	return out.String()
+}
+
+func FlipBits(bits string) string {
+	var out strings.Builder
+	out.Grow(len(bits))
+
+	for _, bit := range bits {
+		if bit == '0' {
+			out.WriteRune('1')
+		} else {
+			out.WriteRune('0')
+		}
+	}
+
+	return out.String()
+}
+
+func WalkBinaryList(input []string, walkCommon bool) string {
+	iterCount := len(input[0])
+	var one, zero []string
+
+	for iter := 0; iter < iterCount; iter++ {
+		if len(input) == 1 {
+			return input[0]
+		}
+
+		for _, s := range input {
+			if s[iter] == '1' {
+				one = append(one, s)
+			} else {
+				zero = append(zero, s)
+			}
+		}
+
+		if walkCommon {
+			if len(one) >= len(zero) {
+				input = one
+			} else {
+				input = zero
+			}
+		} else {
+			if len(one) >= len(zero) {
+				input = zero
+			} else {
+				input = one
+			}
+		}
+
+		one = nil
+		zero = nil
+	}
+
+	if len(input) > 1 {
+		panic(fmt.Sprintf("too many strings '%v'", input))
+	}
+	if len(input) == 0 {
+		panic("no strings")
+	}
+
+	return input[0]
+}
