@@ -31,6 +31,15 @@ func Puzzle(year, day int) ([]byte, error) {
 	return data, nil
 }
 
+func PuzzleString(year, day int) string {
+	data, err := Puzzle(year, day)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(data)
+}
+
 func PuzzleReader(year, day int) *bufio.Reader {
 	data, err := Puzzle(year, day)
 	if err != nil {
