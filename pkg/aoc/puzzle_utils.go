@@ -23,9 +23,14 @@ func puzzleDownload(cookie string, year, day int) ([]byte, error) {
 		return nil, fmt.Errorf("cookie is empty")
 	}
 
+	runnerEmail := os.Getenv("AOC_EMAIL")
+	if runnerEmail == "" {
+		return nil, fmt.Errorf("runner email is empty")
+	}
+
 	r, _ := http.NewRequest("GET", fmt.Sprintf("https://adventofcode.com/%d/day/%d/input", year, day), nil)
 	r.Header.Set("Cookie", "session="+cookie)
-	r.Header.Set("User-Agent", "Santa's Little Helper")
+	r.Header.Set("User-Agent", "github.com/cpl/advent-of-code by "+runnerEmail)
 	r.Header.Set("Accept", "text/plain")
 
 	resp, err := httpClient.Do(r)
