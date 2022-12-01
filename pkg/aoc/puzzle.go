@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 func Puzzle(year, day int) ([]byte, error) {
@@ -37,7 +38,7 @@ func PuzzleString(year, day int) string {
 		panic(err)
 	}
 
-	return string(data)
+	return strings.TrimSpace(string(data))
 }
 
 func PuzzleReader(year, day int) *bufio.Reader {
