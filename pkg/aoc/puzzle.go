@@ -41,6 +41,15 @@ func PuzzleString(year, day int) string {
 	return strings.TrimSpace(string(data))
 }
 
+func PuzzleStringRaw(year, day int) string {
+	data, err := Puzzle(year, day)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(data)
+}
+
 func PuzzleReader(year, day int) *bufio.Reader {
 	data, err := Puzzle(year, day)
 	if err != nil {
