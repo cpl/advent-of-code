@@ -20,24 +20,22 @@ func TestSolveDay06(t *testing.T) {
 		return true
 	}
 
-	part1 := func(stream string) int {
-		for pos := 0; pos < len(stream)-3; pos++ {
-			if uniq(stream[pos : pos+4]) {
-				return pos + 4
+	analyzeStream := func(stream string, window int) int {
+		for pos := 0; pos < len(stream)-window+1; pos++ {
+			if uniq(stream[pos : pos+window]) {
+				return pos + window
 			}
 		}
 
 		return -1
 	}
 
-	part2 := func(stream string) int {
-		for pos := 0; pos < len(stream)-13; pos++ {
-			if uniq(stream[pos : pos+14]) {
-				return pos + 14
-			}
-		}
+	part1 := func(stream string) int {
+		return analyzeStream(stream, 4)
+	}
 
-		return -1
+	part2 := func(stream string) int {
+		return analyzeStream(stream, 14)
 	}
 
 	t.Run("Example 1", func(t *testing.T) {
