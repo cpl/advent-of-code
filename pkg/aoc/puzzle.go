@@ -41,6 +41,12 @@ func PuzzleString(year, day int) string {
 	return strings.TrimSpace(string(data))
 }
 
+func PuzzleStringSliceNewline(year, day int) []string {
+	s := PuzzleString(year, day)
+
+	return strings.Split(s, "\n")
+}
+
 func PuzzleStringRaw(year, day int) string {
 	data, err := Puzzle(year, day)
 	if err != nil {
