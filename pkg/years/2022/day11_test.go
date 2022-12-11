@@ -65,7 +65,7 @@ func TestSolveDay11(t *testing.T) {
 		panic("invalid operation")
 	}
 
-	parseTest := func(lines []string) func(int) int {
+	parseTest := func(lines []string) (func(int) int, int) {
 		var div int
 		var retTrue int
 		var retFalse int
@@ -79,23 +79,27 @@ func TestSolveDay11(t *testing.T) {
 				return retTrue
 			}
 			return retFalse
-		}
+		}, div
 	}
 
-	parse := func(lines []string) []*monkey {
+	parse := func(lines []string) ([]*monkey, int) {
 		monkeys := make([]*monkey, 0, (len(lines)+1)/6)
+		reduceMod := 1
 
 		for idx := 0; idx < len(lines); idx += 7 {
+			testFn, div := parseTest(lines[idx+3 : idx+6])
+			reduceMod *= div
+
 			mo := &monkey{
 				items:     parseItems(lines[idx+1]),
 				operation: parseOperation(lines[idx+2]),
-				test:      parseTest(lines[idx+3 : idx+6]),
+				test:      testFn,
 			}
 
 			monkeys = append(monkeys, mo)
 		}
 
-		return monkeys
+		return monkeys, reduceMod
 	}
 
 	round := func(monkeys []*monkey, relief bool) {
@@ -115,7 +119,7 @@ func TestSolveDay11(t *testing.T) {
 		}
 	}
 
-	part1 := func(monkeys []*monkey) int {
+	part1 := func(monkeys []*monkey, _ int) int {
 		for roundIdx := 0; roundIdx < 20; roundIdx++ {
 			round(monkeys, true)
 		}
@@ -134,9 +138,15 @@ func TestSolveDay11(t *testing.T) {
 		return top1 * top2
 	}
 
-	part2 := func(monkeys []*monkey) int {
+	part2 := func(monkeys []*monkey, reduceMod int) int {
 		for roundIdx := 0; roundIdx < 10000; roundIdx++ {
 			round(monkeys, false)
+
+			for _, mo := range monkeys {
+				for idx, item := range mo.items {
+					mo.items[idx] = item % reduceMod
+				}
+			}
 		}
 
 		var top1, top2 int
