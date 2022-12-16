@@ -106,13 +106,24 @@ func TestSolveDay16(t *testing.T) {
 		return -1
 	}
 
-	var nextBest func(cave, *valve, int, int, []string) int
-	nextBest = func(c cave, current *valve, remaining, flowCum int, open []string) int {
+	var nextBest func(cave, *valve, int, int, []string) (int, []string)
+	nextBest = func(c cave, current *valve, remaining, flowCum int, open []string) (int, []string) {
 		if remaining < 2 {
-			return flowCum
+			return flowCum, open
 		}
 		if remaining == 2 {
-			return flowCum + current.flow
+			isOpen := false
+			for _, o := range open {
+				if o == current.name {
+					isOpen = true
+					break
+				}
+			}
+			if isOpen {
+				return flowCum, open
+			}
+
+			return flowCum + current.flow, append(open, current.name)
 		}
 
 		calculations := make(map[string]struct {
@@ -120,17 +131,15 @@ func TestSolveDay16(t *testing.T) {
 			distance int
 		})
 
-		for name := range c.valves {
+		for name, v := range c.valves {
 			if name == current.name {
 				continue
 			}
 
-			d := distance(c, current.name, name)
-			if remaining-d-1 <= 0 {
+			if v.flow == 0 {
 				continue
 			}
 
-			v := c.valves[name]
 			isOpen := false
 			for _, o := range open {
 				if o == v.name {
@@ -142,8 +151,13 @@ func TestSolveDay16(t *testing.T) {
 				continue
 			}
 
+			d := distance(c, current.name, name)
+			if remaining-d-1 <= 0 {
+				continue
+			}
+
 			score := v.flow * (remaining - d - 1)
-			if score == 0 {
+			if score <= 0 {
 				continue
 			}
 
@@ -154,25 +168,27 @@ func TestSolveDay16(t *testing.T) {
 		}
 
 		bestFlowCum := flowCum
+		bestOpen := open
 
 		for name, calc := range calculations {
 			if calc.score <= 0 {
 				continue
 			}
 
-			v := c.valves[name]
-			nextBestFlowCum := nextBest(c, v, remaining-calc.distance-1, flowCum+calc.score, append(open, v.name))
+			nextBestFlowCum, nextOpen := nextBest(c, c.valves[name], remaining-calc.distance-1, flowCum+calc.score, append(open, name))
 
 			if nextBestFlowCum > bestFlowCum {
 				bestFlowCum = nextBestFlowCum
+				bestOpen = nextOpen
 			}
 		}
 
-		return bestFlowCum
+		return bestFlowCum, bestOpen
 	}
 
 	part1 := func(c cave) int {
-		return nextBest(c, c.valves["AA"], 30, 0, nil)
+		bestFlow, _ := nextBest(c, c.valves["AA"], 30, 0, nil)
+		return bestFlow
 	}
 
 	t.Run("Example 1", func(t *testing.T) {
@@ -180,7 +196,13 @@ func TestSolveDay16(t *testing.T) {
 		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
 	})
 
+	t.Run("Custom 1", func(t *testing.T) {
+		input := "Valve AA has flow rate=0; tunnels lead to valves BB\nValve BB has flow rate=1; tunnels lead to valves AA"
+		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+	})
+
 	// 1949 too high
+	// 1750 too low
 	t.Run("Part 1", func(t *testing.T) {
 		t.Log(part1(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 16), parse))))
 	})
