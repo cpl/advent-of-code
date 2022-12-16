@@ -13,7 +13,6 @@ func TestSolveDay16(t *testing.T) {
 		name       string
 		flow       int
 		neighbours map[string]*valve
-		isOpen     bool
 	}
 
 	parse := func(line string) *valve {
@@ -107,8 +106,15 @@ func TestSolveDay16(t *testing.T) {
 		return -1
 	}
 
-	// this doesn't work, because it's too greedy
-	nextBest := func(c cave, current *valve, remaining int) {
+	var nextBest func(cave, *valve, int, int, []string) int
+	nextBest = func(c cave, current *valve, remaining, flowCum int, open []string) int {
+		if remaining < 2 {
+			return flowCum
+		}
+		if remaining == 2 {
+			return flowCum + current.flow
+		}
+
 		calculations := make(map[string]struct {
 			score    int
 			distance int
@@ -125,25 +131,57 @@ func TestSolveDay16(t *testing.T) {
 			}
 
 			v := c.valves[name]
+			isOpen := false
+			for _, o := range open {
+				if o == v.name {
+					isOpen = true
+					break
+				}
+			}
+			if isOpen {
+				continue
+			}
+
+			score := v.flow * (remaining - d - 1)
+			if score == 0 {
+				continue
+			}
 
 			calculations[name] = struct {
 				score    int
 				distance int
-			}{score: v.flow * (remaining - d - 1), distance: d}
+			}{score: score, distance: d}
 		}
 
-		for k, score := range calculations {
-			fmt.Println(k, score.score, score.distance)
+		bestFlowCum := flowCum
+
+		for name, calc := range calculations {
+			if calc.score <= 0 {
+				continue
+			}
+
+			v := c.valves[name]
+			nextBestFlowCum := nextBest(c, v, remaining-calc.distance-1, flowCum+calc.score, append(open, v.name))
+
+			if nextBestFlowCum > bestFlowCum {
+				bestFlowCum = nextBestFlowCum
+			}
 		}
+
+		return bestFlowCum
 	}
 
 	part1 := func(c cave) int {
-		nextBest(c, c.valves["AA"], 30)
-		return 0
+		return nextBest(c, c.valves["AA"], 30, 0, nil)
 	}
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB\nValve BB has flow rate=13; tunnels lead to valves CC, AA\nValve CC has flow rate=2; tunnels lead to valves DD, BB\nValve DD has flow rate=20; tunnels lead to valves CC, AA, EE\nValve EE has flow rate=3; tunnels lead to valves FF, DD\nValve FF has flow rate=0; tunnels lead to valves EE, GG\nValve GG has flow rate=0; tunnels lead to valves FF, HH\nValve HH has flow rate=22; tunnel leads to valve GG\nValve II has flow rate=0; tunnels lead to valves AA, JJ\nValve JJ has flow rate=21; tunnel leads to valve II"
 		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+	})
+
+	// 1949 too high
+	t.Run("Part 1", func(t *testing.T) {
+		t.Log(part1(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 16), parse))))
 	})
 }
