@@ -17,7 +17,7 @@ func Puzzle(year, day int) ([]byte, error) {
 	fp, err := os.OpenFile(filename, os.O_RDONLY, 0)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return puzzleDownloadAndSave(os.Getenv("AOC_COOKIE"), year, day)
+			return puzzleDownloadAndSave(year, day)
 		}
 
 		return nil, fmt.Errorf("cannot open file %q: %w", filename, err)
