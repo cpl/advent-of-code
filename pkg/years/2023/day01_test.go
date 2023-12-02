@@ -8,6 +8,8 @@ import (
 )
 
 func TestSolveDay01(t *testing.T) {
+	t.Parallel()
+
 	solvePart1 := func(lines []string) int {
 		values := make([]int, 0, len(lines))
 
