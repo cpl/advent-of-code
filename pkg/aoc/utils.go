@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"strconv"
+	"strings"
 )
 
 func ParseLines[T any](r *bufio.Scanner, fn func(line string) T) []T {
@@ -33,4 +35,24 @@ func ParseChars[T any](r *bufio.Reader, fn func(char rune) T) []T {
 	}
 
 	return chars
+}
+
+func ParseLineNumber(scan *bufio.Scanner) []int {
+	return ParseLines(scan, func(line string) int {
+		num, _ := strconv.Atoi(line)
+		return num
+	})
+}
+
+func ParseLineNumbers(scan *bufio.Scanner) [][]int {
+	return ParseLines(scan, func(line string) []int {
+		fields := strings.Fields(line)
+		numbers := make([]int, len(fields))
+
+		for idx, field := range fields {
+			numbers[idx], _ = strconv.Atoi(field)
+		}
+
+		return numbers
+	})
 }
