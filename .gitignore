@@ -2,4 +2,5 @@
 **/input.txt
 **/.cookie
 **/years/*/data/*.txt
+**/years/*/*.txt
 **/years/*/setup_test.go
