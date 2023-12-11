@@ -3,7 +3,6 @@ package y2023
 import (
 	"fmt"
 	"math"
-	"os"
 	"strings"
 	"testing"
 
@@ -224,28 +223,90 @@ func TestSolveDay10(t *testing.T) {
 		return w2
 	}
 
+	convertStartToPipe := func(startPos pos, p1, p2 *pipe) rune {
+		startOpenN, startOpenS, startOpenE, startOpenW := false, false, false, false
+		if p1.position.x == startPos.x {
+			if p1.position.y < startPos.y {
+				startOpenN = true
+			} else {
+				startOpenS = true
+			}
+		} else {
+			if p1.position.x < startPos.x {
+				startOpenW = true
+			} else {
+				startOpenE = true
+			}
+		}
+
+		if p2.position.x == startPos.x {
+			if p2.position.y < startPos.y {
+				startOpenN = true
+			} else {
+				startOpenS = true
+			}
+		} else {
+			if p2.position.x < startPos.x {
+				startOpenW = true
+			} else {
+				startOpenE = true
+			}
+		}
+
+		if startOpenN && startOpenS {
+			return '│'
+		} else if startOpenE && startOpenW {
+			return '─'
+		} else if startOpenN && startOpenE {
+			return '└'
+		} else if startOpenN && startOpenW {
+			return '┘'
+		} else if startOpenS && startOpenE {
+			return '┌'
+		} else if startOpenS && startOpenW {
+			return '┐'
+		} else {
+			panic("not enough starting position connections")
+		}
+	}
+
 	part2 := func(m [][]pipe, startPos pos) int {
 		p1, p2 := getConnections(m, startPos.x, startPos.y)
 
 		_ = walkAndMeasure(m, p1, 1, 1)
 		_ = walkAndMeasure(m, p2, 1, 2)
 
-		fp, _ := os.OpenFile("map.txt", os.O_CREATE|os.O_WRONLY, 0o644)
-		defer fp.Close()
+		m[startPos.y][startPos.x].c = convertStartToPipe(startPos, p1, p2)
+		countContained := 0
 
 		for _, row := range m {
+			contained := false
+
 			for _, p := range row {
-				if p.distance == math.MaxInt {
-					fp.WriteString(" ")
-					continue
+				loopPipe := p.seenWalk1 || p.seenWalk2
+
+				if !loopPipe && contained {
+					countContained++
+					// fmt.Print("#")
+				} else {
+					if p.c == ' ' {
+						p.c = '.'
+					}
+
+					// fmt.Print(string(p.c))
 				}
 
-				fp.WriteString(string(p.c))
+				northPipe := p.c == '│' || p.c == '┘' || p.c == '└'
+
+				if loopPipe && northPipe {
+					contained = !contained
+				}
 			}
-			fp.WriteString("\n")
+
+			// fmt.Println()
 		}
 
-		return 0
+		return countContained
 	}
 
 	t.Run("example 1a", func(t *testing.T) {
@@ -261,11 +322,18 @@ func TestSolveDay10(t *testing.T) {
 	})
 
 	t.Run("example 2a", func(t *testing.T) {
-		t.Log(part2(parseMap("FF7FSF7F7F7F7F7F---7\nL|LJ||||||||||||F--J\nFL-7LJSJ||||||LJL-77\nF--JF--7||LJLJ7F7FJ-\nL---JF-JLJ.||-FJLJJ7\n|F|F-JF---7F7-L7L|7|\n|FFJF7L7F-JF7|JL---7\n7-L-JL7||F7|L7F-7F7|\nL.L7LFJ|||||FJL7||LJ\nL7JLJL-JLJLJL--JLJ.L")))
+		t.Log(part2(parseMap("...........\n.S-------7.\n.|F-----7|.\n.||.....||.\n.||.....||.\n.|L-7.F-J|.\n.|..|.|..|.\n.L--J.L--J.\n...........")))
+	})
+
+	t.Run("example 2b", func(t *testing.T) {
+		t.Log(part2(parseMap(".F----7F7F7F7F-7....\n.|F--7||||||||FJ....\n.||.FJ||||||||L7....\nFJL7L7LJLJ||LJ.L-7..\nL--J.L7...LJS7F-7L7.\n....F-J..F7FJ|L7L7L7\n....L7.F7||L7|.L7L7|\n.....|FJLJ|FJ|F7|.LJ\n....FJL-7.||.||||...\n....L---J.LJ.LJLJ...")))
+	})
+
+	t.Run("example 2c", func(t *testing.T) {
+		t.Log(part2(parseMap("....................\nFF7FSF7F7F7F7F7F---7\nL|LJ||||||||||||F--J\nFL-7LJLJ||||||LJL-77\nF--JF--7||LJLJ7F7FJ-\nL---JF-JLJ.||-FJLJJ7\n|F|F-JF---7F7-L7L|7|\n|FFJF7L7F-JF7|JL---7\n7-L-JL7||F7|L7F-7F7|\nL.L7LFJ|||||FJL7||LJ\nL7JLJL-JLJLJL--JLJ.L")))
 	})
 
 	t.Run("part 2", func(t *testing.T) {
 		t.Log(part2(parseMap(aoc.PuzzleString(2023, 10))))
-		// neah, not happening
 	})
 }
