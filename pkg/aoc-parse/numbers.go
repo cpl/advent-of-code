@@ -7,14 +7,14 @@ import (
 )
 
 func NumberLine(scan *bufio.Scanner) []int {
-	return EachLine(scan, func(line string) int {
+	return EachLine(func(line string) int {
 		num, _ := strconv.Atoi(line)
 		return num
-	})
+	})(scan)
 }
 
 func NumbersLine(scan *bufio.Scanner) [][]int {
-	return EachLine(scan, func(line string) []int {
+	return EachLine(func(line string) []int {
 		fields := strings.Fields(line)
 		numbers := make([]int, len(fields))
 
@@ -23,11 +23,11 @@ func NumbersLine(scan *bufio.Scanner) [][]int {
 		}
 
 		return numbers
-	})
+	})(scan)
 }
 
-func NumbersColumn(scan *bufio.Scanner, columns int) [][]int {
-	return EachColumn(scan, columns, func(line string) []int {
+func NumbersColumn(columns int) Parser[[][]int] {
+	return EachColumn(columns, func(line string) []int {
 		fields := strings.Fields(line)
 		numbers := make([]int, len(fields))
 

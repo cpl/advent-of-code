@@ -13,10 +13,11 @@ func TestEachColumn(t *testing.T) {
 	t.Parallel()
 
 	r := bufio.NewScanner(strings.NewReader("\n\n\n\n\n\n\n\n\n\n\n\n"))
-
-	columns := aoc_parse.EachColumn[int](r, 2, func(line string) []int {
+	parser := aoc_parse.EachColumn[int](2, func(line string) []int {
 		return []int{1, 2}
 	})
+
+	columns := parser(r)
 
 	want := [][]int{
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
