@@ -10,6 +10,44 @@ import (
 
 type SubmitResponse byte
 
+func (response SubmitResponse) String() string {
+	switch response {
+	case SubmitResponseUndefined:
+		return "undefined"
+	case SubmitResponseError:
+		return "error"
+	case SubmitResponseSuccess:
+		return "success"
+	case SubmitResponseWrong:
+		return "wrong"
+	case SubmitResponseTooHigh:
+		return "too_high"
+	case SubmitResponseTooLow:
+		return "too_low"
+	}
+
+	return "unknown"
+}
+
+func (response SubmitResponse) Emoji() string {
+	switch response {
+	case SubmitResponseUndefined:
+		return "❓"
+	case SubmitResponseError:
+		return "🛑"
+	case SubmitResponseSuccess:
+		return "⭐️"
+	case SubmitResponseWrong:
+		return "😕"
+	case SubmitResponseTooHigh:
+		return "📈"
+	case SubmitResponseTooLow:
+		return "📉"
+	}
+
+	return "⁉️"
+}
+
 const (
 	SubmitResponseUndefined SubmitResponse = iota
 	SubmitResponseError
@@ -19,8 +57,27 @@ const (
 	SubmitResponseTooLow
 )
 
+var submitTicker *time.Ticker
+
+func init() {
+	submitTicker = time.NewTicker(time.Second)
+}
+
 func Submit(year, day, part int, answer any) (SubmitResponse, error) {
-	return submitInner(year, day, part, answer, 1)
+	if submitSuccessExists(year, day, part) {
+		return SubmitResponseSuccess, nil
+	}
+
+	response, err := submitInner(year, day, part, answer, 1)
+	if err != nil {
+		return response, err
+	}
+
+	if response == SubmitResponseSuccess {
+		submitSuccessWrite(year, day, part, answer)
+	}
+
+	return response, nil
 }
 
 func submitInner(year, day, part int, answer any, attempt int) (SubmitResponse, error) {
@@ -44,6 +101,8 @@ func submitInner(year, day, part int, answer any, attempt int) (SubmitResponse, 
 	if err != nil {
 		return SubmitResponseError, fmt.Errorf("creating puzzle download request: %w", err)
 	}
+
+	<-submitTicker.C
 
 	resp, err := httpClient.Do(r)
 	if err != nil {
