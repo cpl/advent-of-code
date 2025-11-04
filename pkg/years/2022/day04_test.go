@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay04(t *testing.T) {
@@ -21,7 +22,6 @@ func TestSolveDay04(t *testing.T) {
 	}
 
 	parse := func(line string) [2]pair {
-
 		split := strings.Index(line, ",")
 
 		pair1 := parsePair(line[:split])
@@ -52,19 +52,19 @@ func TestSolveDay04(t *testing.T) {
 
 	t.Run("Examples 1", func(t *testing.T) {
 		input := "2-4,6-8\n2-3,4-5\n5-7,7-9\n2-8,3-7\n6-6,4-6\n2-6,4-8"
-		t.Log(solve(aoc.ParseLines(aoc.InputScanner(input), parse), encapsulates))
+		t.Log(solve(aoc_parse.EachLine(aoc.InputScanner(input), parse), encapsulates))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(solve(aoc.ParseLines(aoc.PuzzleScanner(2022, 4), parse), encapsulates))
+		t.Log(solve(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 4), parse), encapsulates))
 	})
 
 	t.Run("Examples 2", func(t *testing.T) {
 		input := "2-4,6-8\n2-3,4-5\n5-7,7-9\n2-8,3-7\n6-6,4-6\n2-6,4-8"
-		t.Log(solve(aoc.ParseLines(aoc.InputScanner(input), parse), overlaps))
+		t.Log(solve(aoc_parse.EachLine(aoc.InputScanner(input), parse), overlaps))
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		t.Log(solve(aoc.ParseLines(aoc.PuzzleScanner(2022, 4), parse), overlaps))
+		t.Log(solve(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 4), parse), overlaps))
 	})
 }

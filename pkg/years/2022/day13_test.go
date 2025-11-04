@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay13(t *testing.T) {
@@ -232,19 +233,19 @@ func TestSolveDay13(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "[1,1,3,1,1]\n[1,1,5,1,1]\n\n[[1],[2,3,4]]\n[[1],4]\n\n[9]\n[[8,7,6]]\n\n[[4,4],4,4]\n[[4,4],4,4,4]\n\n[7,7,7,7]\n[7,7,7]\n\n[]\n[3]\n\n[[[]]]\n[[]]\n\n[1,[2,[3,[4,[5,6,7]]]],8,9]\n[1,[2,[3,[4,[5,6,0]]]],8,9]"
-		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse))))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 13), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 13), parse))))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
 		input := "[1,1,3,1,1]\n[1,1,5,1,1]\n\n[[1],[2,3,4]]\n[[1],4]\n\n[9]\n[[8,7,6]]\n\n[[4,4],4,4]\n[[4,4],4,4,4]\n\n[7,7,7,7]\n[7,7,7]\n\n[]\n[3]\n\n[[[]]]\n[[]]\n\n[1,[2,[3,[4,[5,6,7]]]],8,9]\n[1,[2,[3,[4,[5,6,0]]]],8,9]"
-		t.Log(part2(aoc.ParseLines(aoc.InputScanner(input), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.InputScanner(input), parse)))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.PuzzleScanner(2022, 13), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 13), parse)))
 	})
 }

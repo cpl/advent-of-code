@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func solveDay01Part1(calories []int) int {
@@ -50,7 +51,7 @@ func solveDay01Part2(calories []int) int {
 
 func TestSolveDay01(t *testing.T) {
 	t.Run("Part 1", func(t *testing.T) {
-		calories := aoc.ParseLines(aoc.PuzzleScanner(2022, 1), func(line string) int {
+		calories := aoc_parse.EachLine(aoc.PuzzleScanner(2022, 1), func(line string) int {
 			if line == "" {
 				return 0
 			}
@@ -63,7 +64,7 @@ func TestSolveDay01(t *testing.T) {
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		calories := aoc.ParseLines(aoc.PuzzleScanner(2022, 1), func(line string) int {
+		calories := aoc_parse.EachLine(aoc.PuzzleScanner(2022, 1), func(line string) int {
 			if line == "" {
 				return 0
 			}

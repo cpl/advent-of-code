@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 // 🌲🌲🎄
@@ -24,7 +25,7 @@ func TestSolveDay08(t *testing.T) {
 		maxX := len(grid[0]) - 1
 		maxY := len(grid) - 1
 		for y, row := range grid {
-			for x, _ := range row {
+			for x := range row {
 				if x == 0 || y == 0 || x == maxX || y == maxY {
 					total++
 				}
@@ -161,19 +162,19 @@ func TestSolveDay08(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "30373\n25512\n65332\n33549\n35390"
-		t.Log(part1(aoc.ParseLines(aoc.InputScanner(input), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.InputScanner(input), parse)))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.PuzzleScanner(2022, 8), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 8), parse)))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
 		input := "30373\n25512\n65332\n33549\n35390"
-		t.Log(part2(aoc.ParseLines(aoc.InputScanner(input), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.InputScanner(input), parse)))
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.PuzzleScanner(2022, 8), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 8), parse)))
 	})
 }

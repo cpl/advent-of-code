@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay14(t *testing.T) {
@@ -16,7 +17,7 @@ func TestSolveDay14(t *testing.T) {
 
 	type simulation struct {
 		grid [][]byte
-		//origin     vec2
+		// origin     vec2
 		dimensions vec2
 		floorY     int
 
@@ -36,7 +37,7 @@ func TestSolveDay14(t *testing.T) {
 	}
 
 	simInBounds := func(sim *simulation, v vec2) bool {
-		//return v.x >= sim.origin.x && v.x < sim.origin.x+sim.dimensions.x &&
+		// return v.x >= sim.origin.x && v.x < sim.origin.x+sim.dimensions.x &&
 		//	v.y >= sim.origin.y && v.y < sim.origin.y+sim.dimensions.y
 
 		if sim.floorY == 0 {
@@ -55,7 +56,7 @@ func TestSolveDay14(t *testing.T) {
 			return 'x'
 		}
 
-		//ret := sim.grid[v.y-sim.origin.y][v.x-sim.origin.x]
+		// ret := sim.grid[v.y-sim.origin.y][v.x-sim.origin.x]
 		ret := sim.grid[v.y][v.x]
 		if ret == 0 {
 			return '.'
@@ -65,7 +66,7 @@ func TestSolveDay14(t *testing.T) {
 	}
 
 	simValueSet := func(sim *simulation, v vec2, value byte) {
-		//sim.grid[v.y-sim.origin.y][v.x-sim.origin.x] = value
+		// sim.grid[v.y-sim.origin.y][v.x-sim.origin.x] = value
 		sim.grid[v.y][v.x] = value
 	}
 
@@ -106,7 +107,7 @@ func TestSolveDay14(t *testing.T) {
 			}
 		}
 
-		//origin := vec2{x: minX, y: minY}
+		// origin := vec2{x: minX, y: minY}
 		dimensions := vec2{x: maxX, y: maxY}
 		grid := make([][]byte, 10000)
 
@@ -116,7 +117,7 @@ func TestSolveDay14(t *testing.T) {
 
 		sim := &simulation{
 			grid: grid,
-			//origin:     origin,
+			// origin:     origin,
 			dimensions: dimensions,
 			minP: vec2{
 				x: minX,
@@ -220,22 +221,22 @@ func TestSolveDay14(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "498,4 -> 498,6 -> 496,6\n503,4 -> 502,4 -> 502,9 -> 494,9"
-		t.Log(part1(simPrint(interpret(aoc.ParseLines(aoc.InputScanner(input), parse)))))
+		t.Log(part1(simPrint(interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse)))))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 14), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 14), parse))))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
 		input := "498,4 -> 498,6 -> 496,6\n503,4 -> 502,4 -> 502,9 -> 494,9"
-		sim := interpret(aoc.ParseLines(aoc.InputScanner(input), parse))
+		sim := interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse))
 		t.Log(part2(sim))
 		simPrint(sim)
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		sim := interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 14), parse))
+		sim := interpret(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 14), parse))
 		t.Log(part2(sim))
 		simPrint(sim)
 	})

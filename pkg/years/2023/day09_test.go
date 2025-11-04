@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay09(t *testing.T) {
@@ -119,11 +120,11 @@ func TestSolveDay09(t *testing.T) {
 	}
 
 	t.Run("example 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLineNumbers(aoc.InputScanner("0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45"))))
+		t.Log(part1(aoc_parse.NumbersLine(aoc.InputScanner("0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45"))))
 	})
 
 	t.Run("part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLineNumbers(aoc.PuzzleScanner(2023, 9))))
+		t.Log(part1(aoc_parse.NumbersLine(aoc.PuzzleScanner(2023, 9))))
 	})
 
 	extrapolateBackwards := func(sequences [][]int) int {
@@ -148,10 +149,10 @@ func TestSolveDay09(t *testing.T) {
 	}
 
 	t.Run("example 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLineNumbers(aoc.InputScanner("0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45"))))
+		t.Log(part2(aoc_parse.NumbersLine(aoc.InputScanner("0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45"))))
 	})
 
 	t.Run("part 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLineNumbers(aoc.PuzzleScanner(2023, 9))))
+		t.Log(part2(aoc_parse.NumbersLine(aoc.PuzzleScanner(2023, 9))))
 	})
 }

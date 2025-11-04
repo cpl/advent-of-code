@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay15(t *testing.T) {
@@ -79,7 +80,7 @@ func TestSolveDay15(t *testing.T) {
 
 	reduce := func(ranges []vec2) []vec2 {
 		for len(ranges) > 2 {
-			//fmt.Println("reduce", ranges)
+			// fmt.Println("reduce", ranges)
 
 			for idx := 0; idx < len(ranges)-1; idx++ {
 				r1 := ranges[idx]
@@ -88,7 +89,7 @@ func TestSolveDay15(t *testing.T) {
 					r2 := ranges[jdx]
 
 					if r, ok := overlap(r1, r2); ok {
-						//fmt.Println("overlap", r1, r2, "=>", r)
+						// fmt.Println("overlap", r1, r2, "=>", r)
 						ranges[idx] = r
 						if jdx == len(ranges)-1 {
 							ranges = ranges[:jdx]
@@ -174,19 +175,19 @@ func TestSolveDay15(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "Sensor at x=2, y=18: closest beacon is at x=-2, y=15\nSensor at x=9, y=16: closest beacon is at x=10, y=16\nSensor at x=13, y=2: closest beacon is at x=15, y=3\nSensor at x=12, y=14: closest beacon is at x=10, y=16\nSensor at x=10, y=20: closest beacon is at x=10, y=16\nSensor at x=14, y=17: closest beacon is at x=10, y=16\nSensor at x=8, y=7: closest beacon is at x=2, y=10\nSensor at x=2, y=0: closest beacon is at x=2, y=10\nSensor at x=0, y=11: closest beacon is at x=2, y=10\nSensor at x=20, y=14: closest beacon is at x=25, y=17\nSensor at x=17, y=20: closest beacon is at x=21, y=22\nSensor at x=16, y=7: closest beacon is at x=15, y=3\nSensor at x=14, y=3: closest beacon is at x=15, y=3\nSensor at x=20, y=1: closest beacon is at x=15, y=3"
-		t.Log(part1(aoc.ParseLines(aoc.InputScanner(input), parse), 10))
+		t.Log(part1(aoc_parse.EachLine(aoc.InputScanner(input), parse), 10))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.PuzzleScanner(2022, 15), parse), 2000000))
+		t.Log(part1(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 15), parse), 2000000))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
 		input := "Sensor at x=2, y=18: closest beacon is at x=-2, y=15\nSensor at x=9, y=16: closest beacon is at x=10, y=16\nSensor at x=13, y=2: closest beacon is at x=15, y=3\nSensor at x=12, y=14: closest beacon is at x=10, y=16\nSensor at x=10, y=20: closest beacon is at x=10, y=16\nSensor at x=14, y=17: closest beacon is at x=10, y=16\nSensor at x=8, y=7: closest beacon is at x=2, y=10\nSensor at x=2, y=0: closest beacon is at x=2, y=10\nSensor at x=0, y=11: closest beacon is at x=2, y=10\nSensor at x=20, y=14: closest beacon is at x=25, y=17\nSensor at x=17, y=20: closest beacon is at x=21, y=22\nSensor at x=16, y=7: closest beacon is at x=15, y=3\nSensor at x=14, y=3: closest beacon is at x=15, y=3\nSensor at x=20, y=1: closest beacon is at x=15, y=3"
-		t.Log(part2(aoc.ParseLines(aoc.InputScanner(input), parse), 20))
+		t.Log(part2(aoc_parse.EachLine(aoc.InputScanner(input), parse), 20))
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.PuzzleScanner(2022, 15), parse), 4000000))
+		t.Log(part2(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 15), parse), 4000000))
 	})
 }

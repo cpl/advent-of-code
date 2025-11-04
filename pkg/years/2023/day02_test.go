@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay02(t *testing.T) {
@@ -19,7 +20,7 @@ func TestSolveDay02(t *testing.T) {
 
 	// Game 1: 2 blue, 4 green; 7 blue, 1 red, 14 green; 5 blue, 13 green, 1 red; 1 red, 7 blue, 11 green
 	parseGames := func(scanner *bufio.Scanner) []game {
-		return aoc.ParseLines(scanner, func(line string) game {
+		return aoc_parse.EachLine(scanner, func(line string) game {
 			idx0 := strings.IndexRune(line, ' ')
 			idx1 := strings.IndexRune(line, ':')
 			gameId, _ := strconv.ParseInt(line[idx0+1:idx1], 10, 64)

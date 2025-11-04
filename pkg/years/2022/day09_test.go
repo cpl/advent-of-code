@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay09(t *testing.T) {
@@ -185,18 +186,18 @@ func TestSolveDay09(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "R 4\nU 4\nL 3\nD 1\nR 4\nD 1\nL 5\nR 2"
-		t.Log(part1(aoc.ParseLines(aoc.InputScanner(input), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.InputScanner(input), parse)))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.PuzzleScanner(2022, 9), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 9), parse)))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
 		input := "R 4\nU 4\nL 3\nD 1\nR 4\nD 1\nL 5\nR 2"
-		t.Log(len(part2(aoc.ParseLines(aoc.InputScanner(input), parse))))
+		t.Log(len(part2(aoc_parse.EachLine(aoc.InputScanner(input), parse))))
 		input = "R 5\nU 8\nL 8\nD 3\nR 17\nD 10\nL 25\nU 20"
-		visited := part2(aoc.ParseLines(aoc.InputScanner(input), parse))
+		visited := part2(aoc_parse.EachLine(aoc.InputScanner(input), parse))
 		t.Log(len(visited))
 		for y := 10; y > -10; y-- {
 			for x := -20; x < 20; x++ {
@@ -216,6 +217,6 @@ func TestSolveDay09(t *testing.T) {
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		t.Log(len(part2(aoc.ParseLines(aoc.PuzzleScanner(2022, 9), parse))))
+		t.Log(len(part2(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 9), parse))))
 	})
 }

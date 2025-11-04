@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay07(t *testing.T) {
@@ -140,18 +141,18 @@ func TestSolveDay07(t *testing.T) {
 	}
 
 	t.Run("example 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.InputScanner("32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483"), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.InputScanner("32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483"), parse)))
 	})
 
 	t.Run("part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.PuzzleScanner(2023, 7), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.PuzzleScanner(2023, 7), parse)))
 	})
 
 	t.Run("example 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.InputScanner("32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483"), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.InputScanner("32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483"), parse)))
 	})
 
 	t.Run("part 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.PuzzleScanner(2023, 7), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.PuzzleScanner(2023, 7), parse)))
 	})
 }

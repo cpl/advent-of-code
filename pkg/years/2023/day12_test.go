@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay12(t *testing.T) {
@@ -113,7 +114,7 @@ func TestSolveDay12(t *testing.T) {
 	}
 
 	t.Run("test 1a", func(t *testing.T) {
-		data := aoc.ParseLines(aoc.InputScanner("#.#.### 1,1,3\n.#...#....###. 1,1,3\n.#.###.#.###### 1,3,1,6\n####.#...#... 4,1,1\n#....######..#####. 1,6,5\n.###.##....# 3,2,1"), parse)
+		data := aoc_parse.EachLine(aoc.InputScanner("#.#.### 1,1,3\n.#...#....###. 1,1,3\n.#.###.#.###### 1,3,1,6\n####.#...#... 4,1,1\n#....######..#####. 1,6,5\n.###.##....# 3,2,1"), parse)
 		for idx, dat := range data {
 			if !isValid(dat.s, dat.damaged) {
 				t.Errorf("expected %d: %s to be valid", idx, dat.s)
@@ -160,11 +161,11 @@ func TestSolveDay12(t *testing.T) {
 	})
 
 	t.Run("example 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.InputScanner("???.### 1,1,3\n.??..??...?##. 1,1,3\n?#?#?#?#?#?#?#? 1,3,1,6\n????.#...#... 4,1,1\n????.######..#####. 1,6,5\n?###???????? 3,2,1"), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.InputScanner("???.### 1,1,3\n.??..??...?##. 1,1,3\n?#?#?#?#?#?#?#? 1,3,1,6\n????.#...#... 4,1,1\n????.######..#####. 1,6,5\n?###???????? 3,2,1"), parse)))
 	})
 
 	t.Run("part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.PuzzleScanner(2023, 12), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.PuzzleScanner(2023, 12), parse)))
 	})
 
 	t.Run("test 2a", func(t *testing.T) {

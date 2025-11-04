@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay02(t *testing.T) {
@@ -101,14 +102,14 @@ func TestSolveDay02(t *testing.T) {
 	}
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(aoc.ParseLines(aoc.PuzzleScanner(2022, 2), parse)))
+		t.Log(part1(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 2), parse)))
 	})
 
 	t.Run("Examples 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.InputScanner("A Y\nB X\nC Z"), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.InputScanner("A Y\nB X\nC Z"), parse)))
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		t.Log(part2(aoc.ParseLines(aoc.PuzzleScanner(2022, 2), parse)))
+		t.Log(part2(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 2), parse)))
 	})
 }

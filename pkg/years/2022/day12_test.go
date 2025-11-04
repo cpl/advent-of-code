@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay12(t *testing.T) {
@@ -127,19 +128,19 @@ func TestSolveDay12(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "Sabqponm\nabcryxxl\naccszExk\nacctuvwj\nabdefghi"
-		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse))))
 	})
 
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 12), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 12), parse))))
 	})
 
 	t.Run("Example 2", func(t *testing.T) {
 		input := "Sabqponm\nabcryxxl\naccszExk\nacctuvwj\nabdefghi"
-		t.Log(part2(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+		t.Log(part2(interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse))))
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		t.Log(part2(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 12), parse))))
+		t.Log(part2(interpret(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 12), parse))))
 	})
 }

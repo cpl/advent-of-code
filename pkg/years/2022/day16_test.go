@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/cpl/advent-of-code/pkg/aoc"
+	"github.com/cpl/advent-of-code/pkg/aoc-parse"
 )
 
 func TestSolveDay16(t *testing.T) {
@@ -193,17 +194,17 @@ func TestSolveDay16(t *testing.T) {
 
 	t.Run("Example 1", func(t *testing.T) {
 		input := "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB\nValve BB has flow rate=13; tunnels lead to valves CC, AA\nValve CC has flow rate=2; tunnels lead to valves DD, BB\nValve DD has flow rate=20; tunnels lead to valves CC, AA, EE\nValve EE has flow rate=3; tunnels lead to valves FF, DD\nValve FF has flow rate=0; tunnels lead to valves EE, GG\nValve GG has flow rate=0; tunnels lead to valves FF, HH\nValve HH has flow rate=22; tunnel leads to valve GG\nValve II has flow rate=0; tunnels lead to valves AA, JJ\nValve JJ has flow rate=21; tunnel leads to valve II"
-		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse))))
 	})
 
 	t.Run("Custom 1", func(t *testing.T) {
 		input := "Valve AA has flow rate=0; tunnels lead to valves BB\nValve BB has flow rate=1; tunnels lead to valves AA"
-		t.Log(part1(interpret(aoc.ParseLines(aoc.InputScanner(input), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.InputScanner(input), parse))))
 	})
 
 	// 1949 too high
 	// 1750 too low
 	t.Run("Part 1", func(t *testing.T) {
-		t.Log(part1(interpret(aoc.ParseLines(aoc.PuzzleScanner(2022, 16), parse))))
+		t.Log(part1(interpret(aoc_parse.EachLine(aoc.PuzzleScanner(2022, 16), parse))))
 	})
 }
