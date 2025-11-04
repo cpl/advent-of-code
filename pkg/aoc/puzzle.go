@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"testing"
 )
 
 func Puzzle(year, day int) ([]byte, error) {
@@ -72,4 +73,18 @@ func PuzzleScanner(year, day int) *bufio.Scanner {
 	scanner.Split(bufio.ScanLines)
 
 	return scanner
+}
+
+func PuzzleScannerTest(t *testing.T) *bufio.Scanner {
+	name := t.Name()
+	name, _, _ = strings.Cut(name, "/")
+
+	var year, day int
+
+	_, err := fmt.Sscanf(name, "TestSolve%dDay%02d", &year, &day)
+	if err != nil {
+		panic(err)
+	}
+
+	return PuzzleScanner(year, day)
 }
