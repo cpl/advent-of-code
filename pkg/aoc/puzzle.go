@@ -76,15 +76,6 @@ func PuzzleScanner(year, day int) *bufio.Scanner {
 }
 
 func PuzzleScannerTest(t *testing.T) *bufio.Scanner {
-	name := t.Name()
-	name, _, _ = strings.Cut(name, "/")
-
-	var year, day int
-
-	_, err := fmt.Sscanf(name, "TestSolve%dDay%02d", &year, &day)
-	if err != nil {
-		panic(err)
-	}
-
+	year, day, _ := puzzleTestInfo(t)
 	return PuzzleScanner(year, day)
 }

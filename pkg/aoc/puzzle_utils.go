@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
+	"testing"
 )
 
 func puzzleFilename(year, day int) string {
@@ -60,4 +62,20 @@ func puzzleDownloadAndSave(year, day int) ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+func puzzleTestInfo(t *testing.T) (year, day, part int) {
+	name := t.Name()
+	name, after, _ := strings.Cut(name, "/")
+
+	_, err := fmt.Sscanf(name, "TestSolve%dDay%02d", &year, &day)
+	if err != nil {
+		panic(err)
+	}
+
+	if after != "" {
+		_, _ = fmt.Sscanf(after, "part_%d", &part)
+	}
+
+	return year, day, part
 }
