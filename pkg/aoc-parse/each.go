@@ -3,6 +3,7 @@ package aoc_parse
 import (
 	"bufio"
 	"fmt"
+	"strings"
 )
 
 func EachLine[T any](fn func(line string) T) Parser[[]T] {
@@ -14,6 +15,26 @@ func EachLine[T any](fn func(line string) T) Parser[[]T] {
 		}
 
 		return lines
+	}
+}
+
+func ColumnsFields() Parser[[][]string] {
+	return func(scanner *bufio.Scanner) [][]string {
+		var out [][]string
+
+		scanner.Split(bufio.ScanLines)
+		for scanner.Scan() {
+			row := strings.Fields(scanner.Text())
+			if len(out) == 0 {
+				out = make([][]string, len(row))
+			}
+
+			for idx := range row {
+				out[idx] = append(out[idx], row[idx])
+			}
+		}
+
+		return out
 	}
 }
 
