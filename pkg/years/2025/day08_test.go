@@ -1,7 +1,7 @@
 package y2025_test
 
 import (
-	"fmt"
+	"cmp"
 	"slices"
 	"testing"
 
@@ -9,30 +9,50 @@ import (
 	aocspace "github.com/cpl/advent-of-code/pkg/aoc-space"
 )
 
+type Junction struct {
+	Circuit  *Circuit
+	Position aocspace.Vec
+}
+
 type Distance struct {
 	J0, J1 *Junction
 	Value  int64
 }
 
-type Junction struct {
-	Circuit     int
-	Position    aocspace.Vec
-	Connections map[*Junction]struct{}
+type Circuit struct {
+	Junctions map[*Junction]struct{}
+}
+
+func (circuit *Circuit) Move(to *Circuit) {
+	for junction := range circuit.Junctions {
+		to.Junctions[junction] = struct{}{}
+		junction.Circuit = to
+		delete(circuit.Junctions, junction)
+	}
+}
+
+func (circuit *Circuit) Add(junction *Junction) {
+	junction.Circuit = circuit
+	circuit.Junctions[junction] = struct{}{}
+}
+
+func (circuit *Circuit) Size() int {
+	return len(circuit.Junctions)
 }
 
 func TestSolve2025Day08(t *testing.T) {
 	// aoc.SolveExamplesOnly(t)
 
 	aoc.SolveExample(t, "example", 1, 40, "162,817,812\n57,618,57\n906,360,560\n592,479,940\n352,342,300\n466,668,158\n542,29,236\n431,825,988\n739,650,466\n52,470,668\n216,146,977\n819,987,18\n117,168,530\n805,96,715\n346,949,466\n970,615,88\n941,993,340\n862,61,35\n984,92,344\n425,690,689")
+	aoc.SolveExample(t, "example", 2, 25272, "162,817,812\n57,618,57\n906,360,560\n592,479,940\n352,342,300\n466,668,158\n542,29,236\n431,825,988\n739,650,466\n52,470,668\n216,146,977\n819,987,18\n117,168,530\n805,96,715\n346,949,466\n970,615,88\n941,993,340\n862,61,35\n984,92,344\n425,690,689")
 
-	aoc.Solve(t, "part 1", aocspace.Vec3Parser(','), func(positions []aocspace.Vec) int {
+	parseJunctions := func(positions []aocspace.Vec) ([]Junction, []Distance) {
 		junctions := make([]Junction, len(positions))
 
 		for idx, pos := range positions {
 			junctions[idx] = Junction{
-				Circuit:     0,
-				Position:    pos,
-				Connections: make(map[*Junction]struct{}, 1024),
+				Circuit:  nil,
+				Position: pos,
 			}
 		}
 
@@ -42,11 +62,6 @@ func TestSolve2025Day08(t *testing.T) {
 			junctionI := &junctions[idx]
 
 			for jdx := idx + 1; jdx < len(junctions); jdx++ {
-				// for jdx := 0; jdx < len(junctions); jdx++ {
-				if jdx == idx {
-					continue
-				}
-
 				junctionJ := &junctions[jdx]
 
 				distance := junctionI.Position.DistanceDelta(junctionJ.Position)
@@ -59,149 +74,133 @@ func TestSolve2025Day08(t *testing.T) {
 		}
 
 		slices.SortFunc(distances, func(a, b Distance) int {
-			return int(a.Value - b.Value)
+			return cmp.Compare(a.Value, b.Value)
 		})
 
-		//for _, d := range distances {
-		//	fmt.Println(d.J0.Position, d.J1.Position, d.Value)
-		//}
+		return junctions, distances
+	}
 
-		// After **making** the ten shortest connections
-		connections := 0
-		connectionsLimit := 10
+	aoc.Solve(t, "part 1", aocspace.Vec3Parser(','), func(positions []aocspace.Vec) int {
+		junctions, distances := parseJunctions(positions)
+		circuits := make([]Circuit, 0, len(junctions))
+
+		limit := 10
 		if !aoc.IsExample() {
-			connectionsLimit = 1000
+			limit = 1000
 		}
 
-		circuitId := 1
-		circuitReMap := make(map[int]int, 1024)
-
-		for _, distance := range distances {
-			if connections >= connectionsLimit {
-				break
-			}
-
+		for _, distance := range distances[:limit] {
 			j0, j1 := distance.J0, distance.J1
 
-			// already connected
-			if _, connected := j0.Connections[j1]; connected {
-				// fmt.Println("already connected", j0.Position, "<->", j1.Position)
-				continue
+			j0HasCircuit := j0.Circuit != nil
+			j1HasCircuit := j1.Circuit != nil
+
+			if j0HasCircuit && j1HasCircuit {
+				// same circuit
+				if j0.Circuit == j1.Circuit {
+					continue
+				}
+
+				// move j0 to j1 circuit
+				j0.Circuit.Move(j1.Circuit)
+			} else if !j0HasCircuit && !j1HasCircuit {
+				// create new circuit
+				circuits = append(circuits, Circuit{
+					Junctions: make(map[*Junction]struct{}, 64),
+				})
+
+				// add j0 and j1
+				circuit := &circuits[len(circuits)-1]
+				circuit.Add(j0)
+				circuit.Add(j1)
+			} else if j0HasCircuit {
+				j0.Circuit.Add(j1)
+			} else if j1HasCircuit {
+				j1.Circuit.Add(j0)
+			} else {
+				panic("impossible")
 			}
-			if _, connected := j1.Connections[j0]; connected {
-				// fmt.Println("X already connected", j0.Position, "<->", j1.Position)
-				continue
-			}
-
-			// already in same circuit
-			if j1.Circuit != 0 && j0.Circuit == j1.Circuit {
-				// fmt.Println("same circuit", j0.Position, j1.Position, "c", j0.Circuit)
-				connections++
-				continue
-			}
-
-			// different circuits?
-			if j0.Circuit != 0 && j1.Circuit != 0 && j0.Circuit != j1.Circuit {
-				// fmt.Println("different circuits means what?")
-				// THEY MERGE !! ffs ...
-
-				connections++
-				circuitReMap[min(j0.Circuit, j1.Circuit)] = max(j0.Circuit, j1.Circuit)
-				continue
-			}
-
-			// j0 part of circuit
-			if j0.Circuit != 0 {
-				connections++
-
-				j1.Circuit = j0.Circuit
-
-				j0.Connections[j1] = struct{}{}
-				j1.Connections[j0] = struct{}{}
-
-				//fmt.Println("joining",
-				//	j1.Position,
-				//	"to",
-				//	j0.Position,
-				//	"to circuit",
-				//	j0.Circuit,
-				//)
-
-				continue
-			}
-
-			// j1 part of circuit
-			if j1.Circuit != 0 {
-				connections++
-
-				j0.Circuit = j1.Circuit
-
-				j0.Connections[j1] = struct{}{}
-				j1.Connections[j0] = struct{}{}
-
-				//fmt.Println("joining",
-				//	j0.Position,
-				//	"to",
-				//	j1.Position,
-				//	"to circuit",
-				//	j1.Circuit,
-				//)
-
-				continue
-			}
-
-			// connect
-			//fmt.Println("connecting",
-			//	j0.Position,
-			//	j1.Position,
-			//	"to circuit",
-			//	circuitId,
-			//)
-
-			j0.Connections[j1] = struct{}{}
-			j1.Connections[j0] = struct{}{}
-			j0.Circuit = circuitId
-			j1.Circuit = circuitId
-			circuitId++
-			connections++
 		}
 
-		circuitsSizes := make([]int, circuitId+1)
-		for _, junction := range junctions {
-			circuitsSizes[junction.Circuit]++
-		}
-
-		// Multiplying together the sizes of the three largest circuits
-		// -- god... is this a reading & attention exercise?
-
-		fmt.Println(circuitsSizes)
-		fmt.Println(circuitReMap)
-
-		// re-map
-		for id, count := range circuitsSizes {
-			idReplacement, replace := circuitReMap[id]
-			if !replace {
-				continue
-			}
-
-			circuitsSizes[id] = 0
-			circuitsSizes[idReplacement] += count
-		}
-
-		circuitsSizes[0] = 0 // ignore 1 junction circuits
-		slices.Sort(circuitsSizes)
-
-		fmt.Println(circuitsSizes)
+		slices.SortFunc(circuits, func(a, b Circuit) int {
+			return b.Size() - a.Size()
+		})
 
 		result := 1
-		for _, size := range circuitsSizes[len(circuitsSizes)-3:] {
-			if size == 0 {
+		for _, circuit := range circuits[:3] {
+			if circuit.Size() == 0 {
 				continue
 			}
 
-			result = result * size
+			result *= circuit.Size()
 		}
 
-		return result // 7920 too low
+		return result
+	})
+
+	aoc.Solve(t, "part 2", aocspace.Vec3Parser(','), func(positions []aocspace.Vec) int {
+		junctions, distances := parseJunctions(positions)
+
+		circuits := make([]Circuit, 0, len(junctions))
+		circuitLess := make(map[*Junction]struct{}, len(junctions))
+		for idx := range junctions {
+			circuitLess[&junctions[idx]] = struct{}{}
+		}
+
+		for _, distance := range distances {
+			j0, j1 := distance.J0, distance.J1
+
+			j0HasCircuit := j0.Circuit != nil
+			j1HasCircuit := j1.Circuit != nil
+
+			if j0HasCircuit && j1HasCircuit {
+				// same circuit
+				if j0.Circuit == j1.Circuit {
+					continue
+				}
+
+				j0.Circuit.Move(j1.Circuit)
+			} else if !j0HasCircuit && !j1HasCircuit {
+				// create new circuit
+				circuits = append(circuits, Circuit{
+					Junctions: make(map[*Junction]struct{}, 64),
+				})
+
+				// add j0 and j1
+				circuit := &circuits[len(circuits)-1]
+				circuit.Add(j0)
+				circuit.Add(j1)
+
+				delete(circuitLess, j0)
+				delete(circuitLess, j1)
+			} else if j0HasCircuit {
+				j0.Circuit.Add(j1)
+				delete(circuitLess, j1)
+			} else if j1HasCircuit {
+				j1.Circuit.Add(j0)
+				delete(circuitLess, j0)
+			} else {
+				panic("impossible")
+			}
+
+			if len(circuitLess) == 0 {
+				ccount := 0
+				for _, circuit := range circuits {
+					if circuit.Size() > 0 {
+						ccount++
+					}
+
+					if ccount > 1 {
+						break
+					}
+				}
+
+				if ccount == 1 {
+					return int(distance.J0.Position.X * distance.J1.Position.X)
+				}
+			}
+		}
+
+		return 0
 	})
 }
