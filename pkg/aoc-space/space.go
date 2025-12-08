@@ -1,5 +1,7 @@
 package aoc_space
 
+import "math"
+
 type Space struct {
 	Size    Vec
 	SizeNeg Vec
@@ -44,6 +46,22 @@ func (v Vec) AddInt(x, y, z int) Vec {
 		Y: v.Y + int64(y),
 		Z: v.Z + int64(z),
 	}
+}
+
+func (v Vec) Distance(other Vec) float64 {
+	dx := other.X - v.X
+	dy := other.Y - v.Y
+	dz := other.Z - v.Z
+
+	return math.Sqrt(float64(dx*dx + dy*dy + dz*dz))
+}
+
+func (v Vec) DistanceDelta(other Vec) int64 {
+	dx := other.X - v.X
+	dy := other.Y - v.Y
+	dz := other.Z - v.Z
+
+	return dx*dx + dy*dy + dz*dz
 }
 
 func Vec2(x, y int) Vec {
