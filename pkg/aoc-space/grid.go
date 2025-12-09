@@ -1,5 +1,7 @@
 package aoc_space
 
+import "fmt"
+
 type Grid2[T any] struct {
 	space *Space
 	data  []T
@@ -117,5 +119,19 @@ func (grid *Grid2[T]) Iterate(f func(point Point[T])) {
 				Position: Vec{X: x, Y: y},
 			})
 		}
+	}
+}
+
+func (grid *Grid2[T]) Dump(f func(v T) string) {
+	space := grid.space
+	size := space.AbsSize()
+
+	for y := -space.SizeNeg.Y; y < space.Size.Y; y++ {
+		for x := -space.SizeNeg.X; x < space.Size.X; x++ {
+			value := grid.getFast(x, y, size.X)
+			fmt.Print(f(value))
+		}
+
+		fmt.Println()
 	}
 }
